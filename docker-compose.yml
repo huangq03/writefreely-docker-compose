@@ -1,0 +1,43 @@
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3336:3306"
+      - "33366:33060"
+    volumes:
+      - ./mysql:/var/lib/mysql
+    networks:
+      - writefreely_network
+    env_file:
+      - .env
+
+  writefreely:
+    image: algernon/writefreely:latest
+    container_name: writefreely
+    restart: unless-stopped
+    ports:
+      - "8011:8080"
+    volumes:
+      - ./data:/data
+      - ./entrypoint.sh:/entrypoint.sh
+    environment:
+      - TZ=Asia/Shanghai
+      - WRITEFREELY_ADMIN_USER=${WRITEFREELY_ADMIN_USER}
+      - WRITEFREELY_ADMIN_PASSWORD=${WRITEFREELY_ADMIN_PASSWORD}
+    depends_on:
+      - mysql
+    networks:
+      - writefreely_network
+    env_file:
+      - .env
+    entrypoint: sh /entrypoint.sh
+
+networks:
+  writefreely_network:
