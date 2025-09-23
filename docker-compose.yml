@@ -9,8 +9,8 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "3336:3306"
-      - "33366:33060"
+      - "3306:3306"
+      - "33060:33060"
     volumes:
       - ./mysql:/var/lib/mysql
     networks:
@@ -28,7 +28,7 @@ services:
     container_name: writefreely
     restart: unless-stopped
     ports:
-      - "8011:8080"
+      - "8080:8080"
     volumes:
       - ./data:/data
       - ./entrypoint.sh:/entrypoint.sh
